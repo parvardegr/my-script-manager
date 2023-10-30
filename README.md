@@ -31,3 +31,17 @@ With my-script-manager you can share your scripts between your devices and with 
 10. access and use your scripts from any machine just by clone it in seconds!
 
 11. enjoy your nice scripts!
+
+## scriptmanager tool
+```bash
+Script Manager v0.1
+
+Usage:
+	scriptmanager [COMMAND]
+
+Commands:
+	--sync: pull from origin and sync scripts
+	--load: init my-script-manager and add scripts to PATH (use .profile)
+	--cron: add cronjob to --sync each 5 minutes
+	--help: show this message
+```
