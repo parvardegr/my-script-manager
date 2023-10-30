@@ -1,0 +1,51 @@
+#!/bin/bash
+
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+
+if [[ $1 == '--load' ]] ; then
+
+    if [ "$EUID" -ne 0 ] ; then
+        echo "Please run --load command as root"
+        exit
+    fi
+    USER_HOME=$(getent passwd "$SUDO_USER" | cut -d : -f 6)
+    file_path="$USER_HOME/.bashrc"
+    echo "add scripts to PATH in $file_path"
+    cat >> $file_path <<- EOM
+export PATH="$script_dir:\$PATH" # add my-script-manager scripts
+EOM
+
+    exit 1
+fi
+
+
+if [[ $1 == '--sync' ]] ; then
+    echo "sync scripts..."
+    cd $script_dir
+    git pull
+    exit 1
+fi
+
+
+if [[ $1 == '--cron' ]] ; then
+    echo "add my-script-manager --sync cronjob..."
+    croncmd="$script_dir/scriptmanager --sync > $script_dir/sync-log.out 2>&1"
+    cronjob="*/5 * * * * $croncmd" # each 5 minutes
+    ( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
+    exit 1
+fi
+
+
+echo "Script Manager v0.1
+
+Usage:
+	scriptmanager [COMMAND]
+
+Commands:
+	--sync: pull from origin and sync scripts
+	--load: init my-script-manager and add scripts to PATH (use .profile)
+	--cron: add cronjob to --sync each 5 minutes
+	--help: show this message
+"
