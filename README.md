@@ -45,3 +45,8 @@ Commands:
 	--cron: add cronjob to --sync each 5 minutes
 	--help: show this message
 ```
+
+# TODO List
+- add alias command: scriptmanager --add-alias "alias ls=ls -lha"
+- remove alias command: scriptmanager --remove-alias "ls"
+- list aliases command: scriptmanager --list-alias "ls"
